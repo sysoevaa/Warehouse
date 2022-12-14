@@ -24,10 +24,10 @@ void Product::SetAmount(int new_amount) {
     amount_ = new_amount;
 }
 
-const Product& Product::operator=(const Product& other) {
-    type_ = other.type_;
-    amount_ = other.amount_;
-    cost_ = other.cost_;
-    return *this;
+int Product::GetDays() {
+    return days_;
 }
 
+void Product::SetDays(int new_days) {
+    days_ = new_days;
+}
