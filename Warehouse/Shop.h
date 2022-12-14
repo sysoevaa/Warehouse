@@ -1,5 +1,6 @@
 #pragma once
-class Shop
-{
+#include "Product.h"
+
+class Shop {
 
 };
