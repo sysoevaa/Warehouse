@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <SFML/Graphics.hpp>
 #include <imgui.h>
 #include <imgui-SFML.h>
@@ -15,10 +15,36 @@ using std::cin;
 using std::cout;
 using std::endl;
 
+class MainMenuSystem {
+public:
+    
+    void AddDock() {
+        if (!ImGui::BeginMainMenuBar()) {
+            return;
+        }
+        if (ImGui::MenuItem("Settings")) {
+
+        }
+        ImGui::EndMainMenuBar();
+    }
+
+    void Present() {
+        this->AddDock();
+
+    }
+
+private:
+    bool settings_;
+};
+
+
 int main(int argc, void* argv) {
-    sf::RenderWindow window(sf::VideoMode(640, 480), "ImGui + SFML = <3");
+    sf::RenderWindow window(sf::VideoMode(640, 480), "");
     window.setFramerateLimit(144);
     ImGui::SFML::Init(window);
+
+    MainMenuSystem mainMenu;
+
 
     sf::Clock deltaClock;
     while (window.isOpen()) {
@@ -33,12 +59,10 @@ int main(int argc, void* argv) {
 
         ImGui::SFML::Update(window, deltaClock.restart());
 
+        ImGui::SetNextWindowSize(ImVec2(100, 50), ImGuiCond_FirstUseEver);
         ImGui::ShowDemoWindow();
 
-        ImGui::SetNextWindowPos(ImVec2(0, 0), ImGuiCond_Always);
-        ImGui::Begin("1");
-        ImGui::Text("1");
-        ImGui::End();
+        mainMenu.Present();
 
         window.clear();
         ImGui::SFML::Render(window);
