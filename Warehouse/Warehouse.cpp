@@ -17,24 +17,35 @@ using std::endl;
 
 class MainMenuSystem {
 public:
-    
+    MainMenuSystem() {
+        this->settings_open = true;
+    }
     void AddDock() {
         if (!ImGui::BeginMainMenuBar()) {
             return;
         }
-        if (ImGui::MenuItem("Settings")) {
+        if (ImGui::MenuItem("Settings", 0, &this->settings_open)) {
 
         }
         ImGui::EndMainMenuBar();
     }
+    void DrawSettings() {
+        ImGui::SetNextWindowSize(ImVec2(300, 200));
+        ImGui::Begin("Settings", 0, ImGuiWindowFlags_NoResize);
+
+        
+
+        ImGui::End();
+    }
 
     void Present() {
         this->AddDock();
+        if (this->settings_open) this->DrawSettings();
 
     }
 
 private:
-    bool settings_;
+    bool settings_open;
 };
 
 
