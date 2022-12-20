@@ -1,11 +1,23 @@
 #pragma once
 #include <random>
 #include <chrono>
+#include <string>
+
+using std::string;
+
+class ProductDefinition {
+
+    string GetName() { return this->displayName; }
+    void SetId(int id) { this->id = id; }
+private:
+    int id;
+    string displayName;
+};
 
 class Product {
 public: 
-    Product(int cost, int amount, int type, int days) : cost_(cost), amount_(amount),
-        type_(type), days_(days) {}
+    Product(ProductDefinition* base, int amount, int life) {}
+
     int GetCost();
     void SetCost(int new_cost);
     int GetType();

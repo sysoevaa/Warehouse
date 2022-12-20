@@ -1,12 +1,35 @@
 #pragma once
 #include "Product.h"
 #include <vector>
+#include <queue>
 
-class Shop {
+using std::vector;
+using std::queue;
+
+class IShopPoint;
+struct ShopQuery {
+    int start;
+    int end;
+    IShopPoint* requestor;
+    IShopPoint* receiver;
+    Product* product;
+};
+
+class IShopPoint {
 public:
-    Shop(std::vector<int>& items) : possible_items_(items) {}
-    std::vector<Product> GenerateQuery();
+    virtual void OnReceived(ShopQuery* query) = 0;
+    virtual ShopQuery* CreateQuery() = 0;
+};
+
+class Shop : IShopPoint {
+public:
+    void Simulate(int deltaTime);
+    virtual void OnReceived(ShopQuery* query);
+    virtual ShopQuery* CreateQuery();
 
 private:
-    std::vector<int> possible_items_;
+    void AddQuery(ShopQuery* query);
+
+    vector<ProductDefinition*> possible_items;
+    queue<ShopQuery*> simQueries;
 };

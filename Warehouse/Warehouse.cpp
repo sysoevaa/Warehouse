@@ -1,85 +1,35 @@
-﻿#include <iostream>
-#include <SFML/Graphics.hpp>
-#include <imgui.h>
-#include <imgui-SFML.h>
+#include "Warehouse.h"
+#include "Config.h"
 
-#include "imgui.h"
-#include "imgui-SFML.h"
+Warehouse* Warehouse::g_Instance = nullptr;
 
-#include <SFML/Graphics/CircleShape.hpp>
-#include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/System/Clock.hpp>
-#include <SFML/Window/Event.hpp>
+Warehouse::Warehouse(Config* cfg) {
+	assert(cfg && "Cfg null");
+	assert(!Warehouse::g_Instance && "only 1 warehouse instance is allowed lmao");
+	this->config = cfg;
+	this->simTime = 0;
 
-using std::cin;
-using std::cout;
-using std::endl;
+	Warehouse::g_Instance = this;
+}
 
-class MainMenuSystem {
-public:
-    MainMenuSystem() {
-        this->settings_open = true;
-    }
-    void AddDock() {
-        if (!ImGui::BeginMainMenuBar()) {
-            return;
-        }
-        if (ImGui::MenuItem("Settings", 0, &this->settings_open)) {
+void Warehouse::Present() {
+	// render
+}
 
-        }
-        ImGui::EndMainMenuBar();
-    }
-    void DrawSettings() {
-        ImGui::SetNextWindowSize(ImVec2(300, 200));
-        ImGui::Begin("Settings", 0, ImGuiWindowFlags_NoResize);
+void Warehouse::Simulate(int deltaTime) {
+	// logic
 
-        
+}
 
-        ImGui::End();
-    }
+void Warehouse::Update() {
+	this->Simulate(this->config->GetSimStep());
+	this->simTime += this->config->GetSimStep();
+}
 
-    void Present() {
-        this->AddDock();
-        if (this->settings_open) this->DrawSettings();
+const vector<Shop*>& Warehouse::GetShops() {
+	return this->config->GetShops();
+}
 
-    }
-
-private:
-    bool settings_open;
-};
-
-
-int main(int argc, void* argv) {
-    sf::RenderWindow window(sf::VideoMode(640, 480), "");
-    window.setFramerateLimit(144);
-    ImGui::SFML::Init(window);
-
-    MainMenuSystem mainMenu;
-
-
-    sf::Clock deltaClock;
-    while (window.isOpen()) {
-        sf::Event event;
-        while (window.pollEvent(event)) {
-            ImGui::SFML::ProcessEvent(event);
-
-            if (event.type == sf::Event::Closed) {
-                window.close();
-            }
-        }
-
-        ImGui::SFML::Update(window, deltaClock.restart());
-
-        ImGui::SetNextWindowSize(ImVec2(100, 50), ImGuiCond_FirstUseEver);
-        ImGui::ShowDemoWindow();
-
-        mainMenu.Present();
-
-        window.clear();
-        ImGui::SFML::Render(window);
-        window.display();
-    }
-
-    ImGui::SFML::Shutdown();
-    return 0;
+const vector<Marketplace*>& Warehouse::GetProviders() {
+	return this->config->GetProviders();
 }
