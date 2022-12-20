@@ -27,9 +27,12 @@ public:
     virtual void OnReceived(ShopQuery* query);
     virtual ShopQuery* CreateQuery();
 
+    Shop(string name);
+    void AddInterested(ProductDefinition* def);
 private:
     void AddQuery(ShopQuery* query);
 
-    vector<ProductDefinition*> possible_items;
+    vector<ProductDefinition*> interestedItems;
     queue<ShopQuery*> simQueries;
+    string displayName;
 };

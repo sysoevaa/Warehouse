@@ -1,33 +1,18 @@
 #include "Product.h"
 
-int Product::GetCost() {
-    return cost_;
+ProductDefinition::ProductDefinition(string name, int prc) {
+    this->displayName = name;
+    this->price = prc;
+    this->id = 0;
 }
 
-void Product::SetCost(int new_cost) {
-    cost_ = new_cost;
+
+Product::Product(ProductDefinition* base, int amount, int life) {
+    this->def = base;
+    this->amount = amount;
+    this->life = life;
 }
 
-int Product::GetType() {
-    return type_;
-}
-
-void Product::SetType(int new_type) {
-    type_ = new_type;
-}
-
-int Product::GetAmount() {
-    return amount_;
-}
-
-void Product::SetAmount(int new_amount) {
-    amount_ = new_amount;
-}
-
-int Product::GetDays() {
-    return days_;
-}
-
-void Product::SetDays(int new_days) {
-    days_ = new_days;
+bool Product::IsValid() {
+    return this->def && this->life >= 0;
 }

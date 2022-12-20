@@ -2,31 +2,36 @@
 #include <random>
 #include <chrono>
 #include <string>
+#include <set>
 
+using std::set;
 using std::string;
 
 class ProductDefinition {
-
+public:
     string GetName() { return this->displayName; }
     void SetId(int id) { this->id = id; }
+
+    ProductDefinition(string name, int price);
 private:
     int id;
+    int price;
     string displayName;
 };
 
 class Product {
 public: 
-    Product(ProductDefinition* base, int amount, int life) {}
+    Product(ProductDefinition* base, int amount, int life);
 
-    int GetCost();
-    void SetCost(int new_cost);
-    int GetType();
-    void SetType(int new_type);
-    int GetAmount();
-    void SetAmount(int new_amount);
-    int GetDays();
-    void SetDays(int new_days);
+    ProductDefinition* GetProductDef() { return this->def; }
+    int GetAmount() { return this->amount; }
+
+    bool IsValid();
 private:
-    int cost_, amount_, type_, days_;
+    static set<Product*> allProducts;
+
+    ProductDefinition* def;
+    int amount;
+    int life;
 };
 
