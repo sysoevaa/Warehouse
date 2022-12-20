@@ -1,5 +1,9 @@
 #include "Warehouse.h"
 #include "Config.h"
+#include "Product.h"
+#include "Shop.h"
+#include "Marketplace.h"
+#include "Utils.h"
 
 Warehouse* Warehouse::g_Instance = nullptr;
 
@@ -18,12 +22,48 @@ void Warehouse::Present() {
 
 void Warehouse::Simulate(int deltaTime) {
 	// logic
+	Product::SimulateAll(deltaTime);
 
+	vector<ShopQuery*> nextPending;
+	nextPending.reserve(this->globalQueries.size());
+	for (auto& query : this->globalQueries) {
+		query->Simulate(deltaTime);
+		if (query->IsFinished()) {
+			query->Execute();
+			delete query;
+		}
+		else {
+			nextPending.push_back(query);
+		}
+	}
+	this->globalQueries = nextPending;
+
+	for (auto& shop : this->GetShops()) {
+		shop->Simulate(deltaTime);
+		while (ShopQuery* q = shop->CreateQuery()) {
+			this->ProcessQuery(q);
+		}
+	}
+	//
+	while (ShopQuery* q = this->CreateQuery()) {
+		this->ProcessQuery(q);
+	}
+
+}
+
+void Warehouse::ProcessQuery(ShopQuery* query) {
+	if (query->IsFinished()) {
+		query->Execute();
+		delete query;
+		return;
+	}
+	this->globalQueries.push_back(query);
 }
 
 void Warehouse::Update() {
 	this->Simulate(this->config->GetSimStep());
 	this->simTime += this->config->GetSimStep();
+	Utils::SyncTime(this->simTime);
 }
 
 const vector<Shop*>& Warehouse::GetShops() {
@@ -32,4 +72,11 @@ const vector<Shop*>& Warehouse::GetShops() {
 
 const vector<Marketplace*>& Warehouse::GetProviders() {
 	return this->config->GetProviders();
+}
+
+void Warehouse::OnReceived(ShopQuery* query) {
+
+}
+ShopQuery* Warehouse::CreateQuery() {
+	return nullptr;
 }

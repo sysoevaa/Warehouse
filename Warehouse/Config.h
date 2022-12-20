@@ -7,6 +7,7 @@ using std::vector;
 class Shop;
 class Marketplace;
 class ProductDefinition;
+class Manager;
 class Config
 {
 public:
@@ -23,11 +24,14 @@ public:
 private:
 	Config() {};
 	void AddDef(ProductDefinition* def);
+	void AddShop(Shop* shop);
+	void AddProvider(Marketplace* market);
 
 	int sim_step;
 
 	vector<ProductDefinition*> allDefs;
 	vector<Shop*> shops;
 	vector<Marketplace*> providers;
+	Manager* manager;
 };
 

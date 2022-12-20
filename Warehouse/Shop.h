@@ -1,27 +1,15 @@
 #pragma once
-#include "Product.h"
 #include <vector>
 #include <queue>
+#include "Product.h"
+#include "ShopQuery.h"
 
 using std::vector;
 using std::queue;
+using std::pair;
 
-class IShopPoint;
-struct ShopQuery {
-    int start;
-    int end;
-    IShopPoint* requestor;
-    IShopPoint* receiver;
-    Product* product;
-};
 
-class IShopPoint {
-public:
-    virtual void OnReceived(ShopQuery* query) = 0;
-    virtual ShopQuery* CreateQuery() = 0;
-};
-
-class Shop : IShopPoint {
+class Shop : public IShopPoint {
 public:
     void Simulate(int deltaTime);
     virtual void OnReceived(ShopQuery* query);
@@ -35,4 +23,5 @@ private:
     vector<ProductDefinition*> interestedItems;
     queue<ShopQuery*> simQueries;
     string displayName;
+    int nextBuyTime;
 };

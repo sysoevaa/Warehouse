@@ -1,17 +1,16 @@
 #include "Shop.h"
 #include "Warehouse.h"
+#include "Utils.h"
 
 void Shop::Simulate(int deltaTime) {
-    /*
-     std::vector<Product> query;
-    std::mt19937 rng(std::chrono::high_resolution_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<> gen(10, 10000);
-    for (auto item : interestedItems) {
-        this->AddQuery(Product(gen(rng), gen(rng) % 50 + 1,
-            gen(rng) % 17 + 1, gen(rng) % 30 + 1));
-    }
-    return query;
-    */
+    if (Utils::GetCurrentTime() < this->nextBuyTime || !this->interestedItems.size())
+        return;
+
+    ProductDefinition* def = this->interestedItems[Utils::Random(0, this->interestedItems.size())];
+    Product* prod = new Product(def, Utils::Random(1, 20));
+    this->AddQuery(ShopQuery::Create(Warehouse::g_Instance, this, 1, prod));
+
+    this->nextBuyTime = Utils::GetCurrentTime() + Utils::Random(0, 3);
 }
 
 void Shop::OnReceived(ShopQuery* query) {
@@ -31,6 +30,7 @@ ShopQuery* Shop::CreateQuery() {
 
 Shop::Shop(string name) {
     this->displayName = name;
+    this->nextBuyTime = Utils::Random(0, 2);
 }
 
 void Shop::AddInterested(ProductDefinition* def) {

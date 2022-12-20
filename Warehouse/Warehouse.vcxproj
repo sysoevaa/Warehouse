@@ -142,19 +142,24 @@
     <ClCompile Include="Config.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MainMenuSystem.cpp" />
+    <ClCompile Include="Manager.cpp" />
     <ClCompile Include="Marketplace.cpp" />
     <ClCompile Include="Product.cpp" />
     <ClCompile Include="Shop.cpp" />
     <ClCompile Include="Stock.cpp" />
+    <ClCompile Include="Utils.cpp" />
     <ClCompile Include="Warehouse.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Config.h" />
     <ClInclude Include="MainMenuSystem.h" />
+    <ClInclude Include="Manager.h" />
     <ClInclude Include="Marketplace.h" />
     <ClInclude Include="Product.h" />
     <ClInclude Include="Shop.h" />
+    <ClInclude Include="ShopQuery.h" />
     <ClInclude Include="Stock.h" />
+    <ClInclude Include="Utils.h" />
     <ClInclude Include="Warehouse.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
