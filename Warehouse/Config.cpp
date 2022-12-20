@@ -14,6 +14,7 @@ Config* Config::CreateDefault() {
 	config->AddDef(new ProductDefinition("Product 4", 100, 14));
 
 	Shop* shop = new Shop("Shawerma #1");
+	shop->AddInterested(config->GetProductDefById(1));
 	config->AddShop(shop);
 
 

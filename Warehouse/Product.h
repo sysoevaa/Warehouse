@@ -11,6 +11,7 @@ class ProductDefinition {
 public:
     string GetName() { return this->displayName; }
     int GetLifeDays() { return this->defaultLife; }
+    int GetPrice() { return this->price; }
     void SetId(int id) { this->id = id; }
 
     ProductDefinition(string name, int price, int life);
@@ -28,6 +29,7 @@ public:
 
     ProductDefinition* GetProductDef() { return this->def; }
     int GetAmount() { return this->amount; }
+    int GetTotalPrice() { return this->amount * this->def->GetPrice(); }
     bool IsValid();
 
     static void SimulateAll(int deltaTime);

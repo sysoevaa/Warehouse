@@ -4,6 +4,7 @@
 #include "Shop.h"
 #include "Marketplace.h"
 #include "Utils.h"
+#include "Manager.h"
 
 Warehouse* Warehouse::g_Instance = nullptr;
 
@@ -73,10 +74,26 @@ const vector<Shop*>& Warehouse::GetShops() {
 const vector<Marketplace*>& Warehouse::GetProviders() {
 	return this->config->GetProviders();
 }
+Manager* Warehouse::GetManager() {
+	return this->config->GetManager();
+}
 
 void Warehouse::OnReceived(ShopQuery* query) {
-
+	if (dynamic_cast<Marketplace*>(query->GetRequestor())) {
+		// this->items.push_back(query->product); product arrived
+		this->ApplyBalanceChange(-query->GetBalance()); // pay
+	}
+	else if (dynamic_cast<Shop*>(query->GetRequestor())) {
+		// hmn add profit, depends on amount we can ship next frame
+		// this->manager->KnopkaBablo() <-- 
+	}
 }
+
+void Warehouse::ApplyBalanceChange(int change) {
+	cout << "Warehouse balance: " << change << endl;
+	this->GetManager()->AddBalanceChange(change);
+}
+
 ShopQuery* Warehouse::CreateQuery() {
 	return nullptr;
 }

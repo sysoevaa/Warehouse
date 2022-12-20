@@ -11,3 +11,7 @@ void Marketplace::OnReceived(ShopQuery* query) {
 ShopQuery* Marketplace::CreateQuery() {
 	return nullptr;
 }
+
+void Marketplace::ApplyBalanceChange(int change) {
+	// infinite money glitch
+}

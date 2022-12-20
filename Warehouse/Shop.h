@@ -14,6 +14,7 @@ public:
     void Simulate(int deltaTime);
     virtual void OnReceived(ShopQuery* query);
     virtual ShopQuery* CreateQuery();
+    virtual void ApplyBalanceChange(int change);
 
     Shop(string name);
     void AddInterested(ProductDefinition* def);

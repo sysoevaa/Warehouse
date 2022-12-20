@@ -18,6 +18,7 @@ public:
 	int GetSimStep() { return this->sim_step; };
 	const vector<Shop*>& GetShops() { return this->shops; }
 	const vector<Marketplace*>& GetProviders() { return this->providers; }
+	Manager* GetManager() { return this->manager; }
 
 	ProductDefinition* GetProductDefById(int id);
 
