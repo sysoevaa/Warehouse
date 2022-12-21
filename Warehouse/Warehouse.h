@@ -23,6 +23,7 @@ public:
 
 	void Present();
 	void Update();
+	Config* GetConfig() { return this->config; }
 
 	virtual void OnReceived(ShopQuery* query);
 	virtual ShopQuery* CreateQuery();

@@ -6,6 +6,8 @@
 #include "Utils.h"
 #include "Manager.h"
 
+#include "imgui.h"
+
 Warehouse* Warehouse::g_Instance = nullptr;
 
 Warehouse::Warehouse(Config* cfg) {
@@ -19,6 +21,8 @@ Warehouse::Warehouse(Config* cfg) {
 
 void Warehouse::Present() {
 	// render
+	ImGui::Text("Main window");
+
 }
 
 void Warehouse::Simulate(int deltaTime) {

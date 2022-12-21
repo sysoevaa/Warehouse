@@ -17,6 +17,7 @@ public:
     MainMenuSystem();
     void AddDock();
     void DrawSettings();
+    void DrawMain();
     void Present();
 
 private:

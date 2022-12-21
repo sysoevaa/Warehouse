@@ -15,6 +15,10 @@ public:
     virtual void OnReceived(ShopQuery* query);
     virtual ShopQuery* CreateQuery();
     virtual void ApplyBalanceChange(int change);
+    string GetName() { return this->displayName; }
+    void SetName(const string& name) { this->displayName = name; }
+    void SetId(int id) { this->id = id; };
+    string GetId() { return "##" + std::to_string(this->id); }
 
     Shop(string name);
     void AddInterested(ProductDefinition* def);
@@ -25,4 +29,5 @@ private:
     queue<ShopQuery*> simQueries;
     string displayName;
     int nextBuyTime;
+    int id;
 };

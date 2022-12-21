@@ -21,7 +21,7 @@ class Bootstrapper {
 public:
     Bootstrapper() {
         this->menu = new MainMenuSystem();
-        this->wnd.create(sf::VideoMode(640, 480), "");
+        this->wnd.create(sf::VideoMode(900, 900), "");
         this->wnd.setFramerateLimit(144);
         this->deltaClock.restart();
         ImGui::SFML::Init(this->wnd);
