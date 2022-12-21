@@ -10,9 +10,13 @@ using std::string;
 class ProductDefinition {
 public:
     string GetName() { return this->displayName; }
+    void SetName(string n) { this->displayName = n; }
     int GetLifeDays() { return this->defaultLife; }
+    void SetLifeDays(int d) { this->defaultLife = d; }
     int GetPrice() { return this->price; }
+    void SetPrice(int pr) { this->price = pr; }
     void SetId(int id) { this->id = id; }
+    string GetId() { return "##" + std::to_string(this->id); }
 
     ProductDefinition(string name, int price, int life);
 private:

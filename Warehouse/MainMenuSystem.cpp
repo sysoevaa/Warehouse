@@ -17,7 +17,7 @@ void MainMenuSystem::AddDock() {
     ImGui::EndMainMenuBar();
 }
 void MainMenuSystem::DrawSettings() {
-    ImGui::SetNextWindowSize(ImVec2(500, 600));
+    ImGui::SetNextWindowSize(ImVec2(700, 600));
     ImGui::Begin("Settings", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
     Warehouse::g_Instance->GetConfig()->Present();
