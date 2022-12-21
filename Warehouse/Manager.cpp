@@ -13,5 +13,5 @@ void Manager::PushQuery(ShopQuery* q) {
 }
 
 void Manager::Think(Warehouse* inst) {
-
+	
 }
