@@ -30,6 +30,7 @@ public:
 	virtual void ApplyBalanceChange(int change);
 
 	vector<ProductDefinition*> GetAllDefs();
+	vector<Product*> GetStorage();
 private:
 	vector<Product*> storage;
 	int simTime;

@@ -106,3 +106,7 @@ ShopQuery* Warehouse::CreateQuery() {
 vector<ProductDefinition*> Warehouse::GetAllDefs() {
 	return this->config->GetAllProdDefs();
 }
+
+vector<Product*> Warehouse::GetStorage() {
+	return storage;
+}

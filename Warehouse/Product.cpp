@@ -32,3 +32,11 @@ void Product::SimulateAll(int deltaTime) {
 void Product::Simulate(int deltaTime) {
     this->life -= deltaTime;
 }
+
+void Product::ChangeAmount(int count) {
+    amount -= count;
+}
+
+int Product::GetDays() {
+    return def->GetLifeDays();
+}

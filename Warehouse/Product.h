@@ -17,7 +17,6 @@ public:
     void SetPrice(int pr) { this->price = std::max(1, pr); }
     void SetId(int id) { this->id = id; }
     string GetId() { return "##" + std::to_string(this->id); }
-
     ProductDefinition(string name, int price, int life);
 private:
     int id;
@@ -37,6 +36,8 @@ public:
     bool IsValid();
 
     static void SimulateAll(int deltaTime);
+    void ChangeAmount(int count);
+    int GetDays();
 private:
     inline void Simulate(int deltaTime);
 
