@@ -35,24 +35,25 @@ void Config::Present() {
 	ImGui::BeginChild("Shops", ImVec2(300, 500), true);
 	ImGui::Text("Shops");
 
-	ImGui::BeginTable("Shops", 1, ImGuiTableFlags_Borders);
-	for (auto& shop : this->GetShops()) {
-		ImGui::TableNextRow();
+	if (ImGui::BeginTable("Shops", 1, ImGuiTableFlags_Borders)) {
+		for (auto& shop : this->GetShops()) {
+			ImGui::TableNextRow();
 
-		ImGui::TableNextColumn();
-		char buf[256] = { 0 };
-		strcpy_s(buf, shop->GetName().c_str());
-		ImGui::SetNextItemWidth(150);
-		ImGui::InputText(shop->GetId().c_str(), buf, sizeof(buf), ImGuiInputTextFlags_NoHorizontalScroll);
-		shop->SetName(buf);
+			ImGui::TableNextColumn();
+			char buf[256] = { 0 };
+			strcpy_s(buf, shop->GetName().c_str());
+			ImGui::SetNextItemWidth(150);
+			ImGui::InputText(shop->GetId().c_str(), buf, sizeof(buf), ImGuiInputTextFlags_NoHorizontalScroll);
+			shop->SetName(buf);
 
-		ImGui::SameLine();
-		ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-		//if (ImGui::Button("Inspect")) {
+			ImGui::SameLine();
+			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
+			//if (ImGui::Button("Inspect")) {
 
-		//}
+			//}
+		}
+		ImGui::EndTable();
 	}
-	ImGui::EndTable();
 
 	if (ImGui::Button("Add new shop")) {
 		Shop* newShop = new Shop("Unnamed shop");
@@ -66,31 +67,32 @@ void Config::Present() {
 	ImGui::BeginChild("Products", ImVec2(300, 500), true);
 	ImGui::Text("Products");
 
-	ImGui::BeginTable("Products", 1, ImGuiTableFlags_Borders, ImVec2(300, 0));
-	for (auto& def : this->allDefs) {
-		ImGui::TableNextRow();
+	if (ImGui::BeginTable("Products", 1, ImGuiTableFlags_Borders, ImVec2(300, 0))) {
+		for (auto& def : this->allDefs) {
+			ImGui::TableNextRow();
 
-		ImGui::TableNextColumn();
-		char buf[256] = { 0 };
-		strcpy_s(buf, def->GetName().c_str());
-		ImGui::SetNextItemWidth(150);
-		ImGui::InputText(def->GetId().c_str(), buf, sizeof(buf), ImGuiInputTextFlags_NoHorizontalScroll);
-		def->SetName(buf);
+			ImGui::TableNextColumn();
+			char buf[256] = { 0 };
+			strcpy_s(buf, def->GetName().c_str());
+			ImGui::SetNextItemWidth(150);
+			ImGui::InputText(def->GetId().c_str(), buf, sizeof(buf), ImGuiInputTextFlags_NoHorizontalScroll);
+			def->SetName(buf);
 
-		int price = def->GetPrice();
-		ImGui::SetNextItemWidth(70);
-		ImGui::InputInt(("Price" + def->GetId()).c_str(), &price, 1, 30);
-		def->SetPrice(price);
+			int price = def->GetPrice();
+			ImGui::SetNextItemWidth(70);
+			ImGui::InputInt(("Price" + def->GetId()).c_str(), &price, 1, 30);
+			def->SetPrice(price);
 
-		int days = def->GetLifeDays();
-		ImGui::SetNextItemWidth(70);
-		ImGui::InputInt(("Life days" + def->GetId()).c_str(), &days, 1, 30);
-		def->SetLifeDays(days);
-		//if (ImGui::Button("Inspect")) {
+			int days = def->GetLifeDays();
+			ImGui::SetNextItemWidth(70);
+			ImGui::InputInt(("Life days" + def->GetId()).c_str(), &days, 1, 3);
+			def->SetLifeDays(days);
+			//if (ImGui::Button("Inspect")) {
 
-		//}
+			//}
+		}
+		ImGui::EndTable();
 	}
-	ImGui::EndTable();
 
 	if (ImGui::Button("Add new product")) {
 		ProductDefinition* def = new ProductDefinition("Unnamed product", 100, 14);

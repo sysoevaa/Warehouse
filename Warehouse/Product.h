@@ -12,9 +12,9 @@ public:
     string GetName() { return this->displayName; }
     void SetName(string n) { this->displayName = n; }
     int GetLifeDays() { return this->defaultLife; }
-    void SetLifeDays(int d) { this->defaultLife = d; }
+    void SetLifeDays(int d) { this->defaultLife = std::max(1, d); }
     int GetPrice() { return this->price; }
-    void SetPrice(int pr) { this->price = pr; }
+    void SetPrice(int pr) { this->price = std::max(1, pr); }
     void SetId(int id) { this->id = id; }
     string GetId() { return "##" + std::to_string(this->id); }
 
