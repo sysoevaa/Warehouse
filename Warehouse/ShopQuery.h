@@ -17,6 +17,7 @@ public:
     void Execute() { this->receiver->OnReceived(this); }
     int GetBalance() { return this->recvBalanceDelta; }
     IShopPoint* GetRequestor(){ return this->requestor; }
+    Product* GetProduct() { return this->product; }
 
     static inline ShopQuery* Create(IShopPoint* from, IShopPoint* to, int delay, Product* item, int recvBalanceDelta) {
         ShopQuery* inst = new ShopQuery();

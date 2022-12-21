@@ -7,3 +7,11 @@ Manager::Manager() {
 void Manager::AddBalanceChange(int delta) {
 	this->totalProfit += delta;
 }
+
+void Manager::PushQuery(ShopQuery* q) {
+	this->pendingQueries.push_back(*q);
+}
+
+void Manager::Think(Warehouse* inst) {
+
+}

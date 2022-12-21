@@ -3,7 +3,9 @@
 #include "Config.h"
 
 MainMenuSystem::MainMenuSystem() {
-    this->settings_open = true;
+    this->products_open = true;
+    this->shops_open = false;
+    this->prov_open = false;
 }
 
 
@@ -11,16 +13,33 @@ void MainMenuSystem::AddDock() {
     if (!ImGui::BeginMainMenuBar()) {
         return;
     }
-    if (ImGui::MenuItem("Settings", 0, &this->settings_open)) {
-
-    }
+    if (ImGui::MenuItem("Products", 0, &this->products_open)) {}
+    if (ImGui::MenuItem("Shops", 0, &this->shops_open)) {}
+    //if (ImGui::MenuItem("Providers", 0, &this->prov_open)) {}
     ImGui::EndMainMenuBar();
 }
-void MainMenuSystem::DrawSettings() {
+void MainMenuSystem::DrawProducts() {
     ImGui::SetNextWindowSize(ImVec2(700, 600));
-    ImGui::Begin("Settings", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+    ImGui::Begin("Products", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
 
-    Warehouse::g_Instance->GetConfig()->Present();
+    Warehouse::g_Instance->GetConfig()->DrawProducts();
+
+    ImGui::End();
+}
+void MainMenuSystem::DrawShops() {
+    ImGui::SetNextWindowSize(ImVec2(700, 600));
+    ImGui::Begin("Shops", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+    Warehouse::g_Instance->GetConfig()->DrawShops();
+
+    ImGui::End();
+}
+
+void MainMenuSystem::DrawProviders() {
+    ImGui::SetNextWindowSize(ImVec2(700, 600));
+    ImGui::Begin("Providers", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoCollapse);
+
+    Warehouse::g_Instance->GetConfig()->DrawProviders();
 
     ImGui::End();
 }
@@ -29,7 +48,10 @@ void MainMenuSystem::Present() {
     //ImGui::SetNextWindowSize(ImVec2(100, 50), ImGuiCond_FirstUseEver);
     this->AddDock();
     this->DrawMain();
-    if (this->settings_open) this->DrawSettings();
+    if (this->products_open) this->DrawProducts();
+    if (this->shops_open) this->DrawShops();
+    if (this->prov_open) this->DrawProviders();
+
 }
 
 void MainMenuSystem::DrawMain() {

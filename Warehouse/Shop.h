@@ -21,11 +21,9 @@ public:
     string GetId() { return "##" + std::to_string(this->id); }
 
     Shop(string name);
-    void AddInterested(ProductDefinition* def);
 private:
     void AddQuery(ShopQuery* query);
 
-    vector<ProductDefinition*> interestedItems;
     queue<ShopQuery*> simQueries;
     string displayName;
     int nextBuyTime;

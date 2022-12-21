@@ -50,10 +50,11 @@ void Warehouse::Simulate(int deltaTime) {
 		}
 	}
 	//
+	this->GetManager()->Think(this);
+
 	while (ShopQuery* q = this->CreateQuery()) {
 		this->ProcessQuery(q);
 	}
-
 }
 
 void Warehouse::ProcessQuery(ShopQuery* query) {
@@ -75,8 +76,8 @@ const vector<Shop*>& Warehouse::GetShops() {
 	return this->config->GetShops();
 }
 
-const vector<Marketplace*>& Warehouse::GetProviders() {
-	return this->config->GetProviders();
+Marketplace* Warehouse::GetProvider() {
+	return this->config->GetProvider();
 }
 Manager* Warehouse::GetManager() {
 	return this->config->GetManager();
@@ -84,12 +85,12 @@ Manager* Warehouse::GetManager() {
 
 void Warehouse::OnReceived(ShopQuery* query) {
 	if (dynamic_cast<Marketplace*>(query->GetRequestor())) {
-		// this->items.push_back(query->product); product arrived
+		this->storage.push_back(query->GetProduct());
 		this->ApplyBalanceChange(-query->GetBalance()); // pay
 	}
 	else if (dynamic_cast<Shop*>(query->GetRequestor())) {
 		// hmn add profit, depends on amount we can ship next frame
-		// this->manager->KnopkaBablo() <-- 
+		
 	}
 }
 
@@ -100,4 +101,8 @@ void Warehouse::ApplyBalanceChange(int change) {
 
 ShopQuery* Warehouse::CreateQuery() {
 	return nullptr;
+}
+
+vector<ProductDefinition*> Warehouse::GetAllDefs() {
+	return this->config->GetAllProdDefs();
 }

@@ -28,15 +28,19 @@ public:
 	virtual void OnReceived(ShopQuery* query);
 	virtual ShopQuery* CreateQuery();
 	virtual void ApplyBalanceChange(int change);
-private:
-	void Simulate(int deltaTime);
 
+	vector<ProductDefinition*> GetAllDefs();
+private:
+	vector<Product*> storage;
 	int simTime;
 	Config* config;
 	vector<ShopQuery*> globalQueries;
 
 	void ProcessQuery(ShopQuery* query);
 	const vector<Shop*>& GetShops();
-	const vector<Marketplace*>& GetProviders();
+	Marketplace* GetProvider();
 	Manager* GetManager();
+	void Simulate(int deltaTime);
+
+	friend class Manager;
 };

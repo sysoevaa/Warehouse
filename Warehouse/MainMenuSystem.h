@@ -16,11 +16,15 @@ class MainMenuSystem {
 public:
     MainMenuSystem();
     void AddDock();
-    void DrawSettings();
+    void DrawProducts();
+    void DrawShops();
+    void DrawProviders();
     void DrawMain();
     void Present();
 
 private:
-    bool settings_open;
+    bool products_open;
+    bool shops_open;
+    bool prov_open;
 };
 

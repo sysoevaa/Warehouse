@@ -3,10 +3,12 @@
 #include "Utils.h"
 
 void Shop::Simulate(int deltaTime) {
-    if (Utils::GetCurrentTime() < this->nextBuyTime || !this->interestedItems.size())
+    if (Utils::GetCurrentTime() < this->nextBuyTime)
         return;
 
-    ProductDefinition* def = this->interestedItems[Utils::Random(0, this->interestedItems.size() - 1)];
+    const auto& prods = Warehouse::g_Instance->GetAllDefs();
+
+    ProductDefinition* def = prods[Utils::Random(0, prods.size() - 1)];
     Product* prod = new Product(def, Utils::Random(1, 20));
     this->AddQuery(ShopQuery::Create(this, Warehouse::g_Instance, 1, prod, prod->GetTotalPrice()));
 
@@ -35,9 +37,4 @@ ShopQuery* Shop::CreateQuery() {
 Shop::Shop(string name) {
     this->displayName = name;
     this->nextBuyTime = Utils::Random(0, 2);
-}
-
-void Shop::AddInterested(ProductDefinition* def) {
-    // check exists
-    this->interestedItems.push_back(def);
 }

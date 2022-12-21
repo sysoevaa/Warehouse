@@ -2,8 +2,13 @@
 #include "Product.h"
 #include "Shop.h"
 #include "Manager.h"
+#include "Marketplace.h"
 
 #include "imgui.h"
+
+Config::Config() {
+	
+}
 
 Config* Config::CreateDefault() {
 	Config* config = new Config();
@@ -16,18 +21,21 @@ Config* Config::CreateDefault() {
 	config->AddDef(new ProductDefinition("Product 4", 100, 14));
 
 	Shop* shop = new Shop("Shawerma #1");
-	shop->AddInterested(config->GetProductDefById(1));
 	config->AddShop(shop);
 
 	Shop* shop2 = new Shop("Shawerma #2");
-	shop2->AddInterested(config->GetProductDefById(1));
 	config->AddShop(shop2);
 
 	config->manager = new Manager();
+	config->provider = new Marketplace();
 	return config;
 }
 
-void Config::Present() {
+const vector<ProductDefinition*>& Config::GetAllProdDefs() {
+	return this->allDefs;
+}
+
+void Config::DrawShops() {
 	// render
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 5));
 	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 10));
@@ -48,9 +56,11 @@ void Config::Present() {
 
 			ImGui::SameLine();
 			ImGui::SetCursorPosX(ImGui::GetCursorPosX() + 10);
-			//if (ImGui::Button("Inspect")) {
 
-			//}
+			if (ImGui::Button(("Delete" + shop->GetId()).c_str())) {
+				this->DeleteShop(shop);
+				break;
+			}
 		}
 		ImGui::EndTable();
 	}
@@ -62,15 +72,21 @@ void Config::Present() {
 
 	ImGui::EndChild();
 
-	ImGui::SameLine();
+	ImGui::PopStyleVar(2);
+}
+
+void Config::DrawProducts() {
+	// render
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemSpacing, ImVec2(0, 5));
+	ImGui::PushStyleVar(ImGuiStyleVar_ItemInnerSpacing, ImVec2(0, 10));
 
 	ImGui::BeginChild("Products", ImVec2(300, 500), true);
 	ImGui::Text("Products");
 
 	if (ImGui::BeginTable("Products", 1, ImGuiTableFlags_Borders, ImVec2(300, 0))) {
 		for (auto& def : this->allDefs) {
-			ImGui::TableNextRow();
 
+			ImGui::TableNextRow();
 			ImGui::TableNextColumn();
 			char buf[256] = { 0 };
 			strcpy_s(buf, def->GetName().c_str());
@@ -87,9 +103,6 @@ void Config::Present() {
 			ImGui::SetNextItemWidth(70);
 			ImGui::InputInt(("Life days" + def->GetId()).c_str(), &days, 1, 3);
 			def->SetLifeDays(days);
-			//if (ImGui::Button("Inspect")) {
-
-			//}
 		}
 		ImGui::EndTable();
 	}
@@ -104,20 +117,32 @@ void Config::Present() {
 	ImGui::PopStyleVar(2);
 }
 
+void Config::DeleteShop(Shop* shop) {
+	for (auto it = this->shops.begin(); it != this->shops.end(); ++it) {
+		if (*it == shop) {
+			this->shops.erase(it);
+			break;
+		}
+	}
+}
+
+void Config::DrawProviders() {
+	
+}
+
 void Config::AddDef(ProductDefinition* def) {
+	static int defCount = 0;
 	this->allDefs.push_back(def);
-	def->SetId(this->allDefs.size());
+	def->SetId(++defCount);
 }
 
-void Config::AddProvider(Marketplace* market) {
-	this->providers.push_back(market);
-}
 void Config::AddShop(Shop* shop) {
+	static int shopCount = 0;
 	this->shops.push_back(shop);
-	shop->SetId(this->shops.size());
+	shop->SetId(++shopCount);
 }
 
-ProductDefinition* Config::GetProductDefById(int id) {
+ProductDefinition* Config::GetProductDefByIndex(int id) {
 	if (id < 0 || id >= this->allDefs.size()) return nullptr;
 	return this->allDefs[id];
 }

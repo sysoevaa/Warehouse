@@ -12,27 +12,30 @@ class Config
 {
 public:
 	static Config* CreateDefault();
-	void Present();
+	void DrawProducts();
+	void DrawShops();
+	void DrawProviders();
 
 
 	int GetSimStep() { return this->sim_step; };
 	const vector<Shop*>& GetShops() { return this->shops; }
-	const vector<Marketplace*>& GetProviders() { return this->providers; }
+	Marketplace* GetProvider() { return this->provider; }
 	Manager* GetManager() { return this->manager; }
 
-	ProductDefinition* GetProductDefById(int id);
+	ProductDefinition* GetProductDefByIndex(int id);
+	const vector<ProductDefinition*>& GetAllProdDefs();
 
 private:
-	Config() {};
+	Config();
 	void AddDef(ProductDefinition* def);
 	void AddShop(Shop* shop);
-	void AddProvider(Marketplace* market);
+	void DeleteShop(Shop* shop);
 
 	int sim_step;
 
 	vector<ProductDefinition*> allDefs;
 	vector<Shop*> shops;
-	vector<Marketplace*> providers;
+	Marketplace* provider;
 	Manager* manager;
 };
 
