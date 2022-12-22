@@ -67,6 +67,8 @@ void Warehouse::ProcessQuery(ShopQuery* query) {
 }
 
 void Warehouse::Update() {
+	if (this->simTime > 50) return;
+	cout << "----------------------------TIME " << this->simTime << endl;
 	this->Simulate(this->config->GetSimStep());
 	this->simTime += this->config->GetSimStep();
 	Utils::SyncTime(this->simTime);
@@ -87,16 +89,17 @@ void Warehouse::OnReceived(ShopQuery* query) {
 	if (dynamic_cast<Marketplace*>(query->GetRequestor())) {
 		this->storage.push_back(query->GetProduct());
 		this->ApplyBalanceChange(-query->GetBalance()); // pay
+		cout << "Received " << query->GetProduct()->GetAmount() << " of " << query->GetProduct()->GetProductDef()->GetName() << endl;
 	}
 	else if (dynamic_cast<Shop*>(query->GetRequestor())) {
 		// hmn add profit, depends on amount we can ship next frame
-		
+		this->GetManager()->PushQuery(query);
 	}
 }
 
 void Warehouse::ApplyBalanceChange(int change) {
-	cout << "Warehouse balance: " << change << endl;
 	this->GetManager()->AddBalanceChange(change);
+	cout << "Warehouse balance: " << this->GetManager()->GetTotalProfit() << endl;
 }
 
 ShopQuery* Warehouse::CreateQuery() {

@@ -13,8 +13,11 @@ public:
 
     void AddBalanceChange(int delta);
     void PushQuery(ShopQuery* q);
+    int GetTotalProfit() { return this->totalProfit; }
 
     virtual void Think(Warehouse* warehouse) = 0;
+    void OrderMissing(Warehouse* warehouse);
+    void RemoveExpired(Warehouse* warehouse);
 
 protected:
     std::vector<ShopQuery> pendingQueries;
@@ -23,10 +26,10 @@ protected:
 
 class GreedyManager : public Manager {
 public:
-    void Think(Warehouse* warehouse);
+    virtual void Think(Warehouse* warehouse);
 };
 
 class EconomyManager : public Manager {
 public:
-    void Think(Warehouse* warehouse);
-}
+    virtual void Think(Warehouse* warehouse);
+};

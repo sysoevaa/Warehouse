@@ -10,9 +10,12 @@ void Shop::Simulate(int deltaTime) {
 
     ProductDefinition* def = prods[Utils::Random(0, prods.size() - 1)];
     Product* prod = new Product(def, Utils::Random(1, 20));
+    int delta = Utils::Random(-100, 100);
+    prod->SetPriceDelta(delta);
+    cout << "Shop ordered " << prod->GetAmount() << " of " << prod->GetProductDef()->GetName() << " delta " << delta << endl;
     this->AddQuery(ShopQuery::Create(this, Warehouse::g_Instance, 1, prod, prod->GetTotalPrice()));
 
-    this->nextBuyTime = Utils::GetCurrentTime() + Utils::Random(0, 3);
+    this->nextBuyTime = Utils::GetCurrentTime() + Utils::Random(0, 2);
 }
 
 void Shop::OnReceived(ShopQuery* query) {

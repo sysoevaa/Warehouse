@@ -31,6 +31,7 @@ public:
 
 	vector<ProductDefinition*> GetAllDefs();
 	vector<Product*> GetStorage();
+	void SetStorage(vector<Product*> prods) { this->storage = prods; }
 private:
 	vector<Product*> storage;
 	int simTime;

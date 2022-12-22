@@ -1,4 +1,5 @@
 #include "Manager.h"
+#include "Marketplace.h"
 #include <algorithm>
 
 
@@ -14,25 +15,84 @@ void Manager::PushQuery(ShopQuery* q) {
     this->pendingQueries.push_back(*q);
 }
 
+void Manager::RemoveExpired(Warehouse* warehouse) {
+    auto vv = warehouse->GetStorage();
+    vector<Product*> prods;
+    prods.reserve(vv.size());
+    for (auto& v : vv) {
+        if (v->IsValid()) {
+            prods.push_back(v);
+        }
+    }
+    warehouse->SetStorage(prods);
+}
+
+
+void Manager::OrderMissing(Warehouse* warehouse) {
+    std::map<ProductDefinition*, int> amounts;
+
+    for (auto& v : warehouse->GetStorage()) {
+        if (v->IsValid())
+            amounts[v->GetProductDef()] += v->GetAmount();
+    }
+    for (auto& q : warehouse->globalQueries) {
+        if (q->GetRequestor() == warehouse->GetProvider() && q->GetProduct()->IsValid()) {
+            amounts[q->GetProduct()->GetProductDef()] += q->GetProduct()->GetAmount();
+        }
+    }
+
+    for (ProductDefinition* def : warehouse->GetAllDefs()) {
+        int has = amounts[def];
+        int need = def->GetMaxAmount() * 0.75;
+        if (has < need) {
+            // order
+            int rnd = Utils::Random(1, 4); // order delay
+            Product* prod = new Product(def, need - has);
+            cout << "Ordering " << prod->GetAmount() << " of " << def->GetName() << endl;
+            warehouse->ProcessQuery(ShopQuery::Create(warehouse->GetProvider(), warehouse, rnd, prod, prod->GetTotalPrice()));
+        }
+    }
+}
+
 void GreedyManager::Think(Warehouse* warehouse) {
     std::sort(pendingQueries.begin(), pendingQueries.end(),
         [&](ShopQuery& a, ShopQuery& b) {
             return a.GetBalance() > b.GetBalance();
         });
     for (auto item : pendingQueries) {
-        auto name = item.GetProduct()->GetProductDef()->GetName();
-        for (auto& product : warehouse->GetStorage()) {
-            if (product->GetProductDef()->GetName() == name) {
-                int count = std::min(product->GetAmount(), item.GetProduct()->GetAmount());
-                warehouse->ApplyBalanceChange(count * item.GetProduct()->GetProductDef()->GetPrice());
-                totalProfit += count * item.GetProduct()->GetProductDef()->GetPrice();
-                product->ChangeAmount(count);
-                if (product->GetAmount() <= 1) {
-                    // query to marketplace;
-                }
+        vector<Product*> exist;
+        for (auto& pr : warehouse->GetStorage()) {
+            if (pr->IsValid() && pr->GetProductDef() == item.GetProduct()->GetProductDef()) {
+                exist.push_back(pr);
             }
         }
+        std::sort(exist.begin(), exist.end(),
+            [&](Product* a, Product* b) {
+                return a->GetDays() < b->GetDays();
+        });
+
+        if (item.GetProduct()->GetPrice() < item.GetProduct()->GetProductDef()->GetPrice()) {
+            if (exist.size() > 0 && exist[0]->GetDays() > 3) {
+                delete item.GetProduct(); // selling with losses, only accept if it's about to expire
+                continue;
+            }
+        }
+
+        for (auto& product : exist) {
+            int count = std::min(product->GetAmount(), item.GetProduct()->GetAmount());
+            if (!count) continue;
+            cout << "Sold " << count << " of " << product->GetProductDef()->GetName() << endl;
+            warehouse->ApplyBalanceChange(count * item.GetProduct()->GetPrice());
+            totalProfit += count * item.GetProduct()->GetPrice();
+            product->ChangeAmount(count);
+            break;
+        }
+
+        delete item.GetProduct();
     }
+    pendingQueries.clear();
+
+    this->OrderMissing(warehouse);
 }
 
 void EconomyManager::Think(Warehouse* warehouse) {
@@ -41,18 +101,20 @@ void EconomyManager::Think(Warehouse* warehouse) {
             return a.GetProduct()->GetDays() < b.GetProduct()->GetDays();
         });
     for (auto item : pendingQueries) {
-        auto name = item.GetProduct()->GetProductDef()->GetName();
+        auto name = item.GetProduct()->GetProductDef()->GetId();
+
         for (auto& product : warehouse->GetStorage()) {
-            if (product->GetProductDef()->GetName() == name) {
+            if (product->GetProductDef()->GetId() == name) {
                 int count = std::min(product->GetAmount(), item.GetProduct()->GetAmount());
-                warehouse->ApplyBalanceChange(count * item.GetProduct()->GetProductDef()->GetPrice());
-                totalProfit += count * item.GetProduct()->GetProductDef()->GetPrice();
+                warehouse->ApplyBalanceChange(count * item.GetProduct()->GetPrice());
+                totalProfit += count * item.GetProduct()->GetPrice();
                 product->ChangeAmount(count);
-                if (product->GetAmount() <= 1) {
-                    // query to marketplace;
-                }
             }
         }
+        delete item.GetProduct();
     }
+    pendingQueries.clear();
+
+    this->OrderMissing(warehouse);
 }
 

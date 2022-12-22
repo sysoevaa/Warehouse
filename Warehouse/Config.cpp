@@ -15,10 +15,10 @@ Config* Config::CreateDefault() {
 
 	config->sim_step = 1;
 
-	config->AddDef(new ProductDefinition("Product 1", 100, 14));
-	config->AddDef(new ProductDefinition("Product 2", 100, 14));
-	config->AddDef(new ProductDefinition("Product 3", 100, 14));
-	config->AddDef(new ProductDefinition("Product 4", 100, 14));
+	config->AddDef(new ProductDefinition("Product 1", 100, 14, 20));
+	config->AddDef(new ProductDefinition("Product 2", 100, 14, 20));
+	config->AddDef(new ProductDefinition("Product 3", 100, 14, 20));
+	config->AddDef(new ProductDefinition("Product 4", 100, 14, 20));
 
 	Shop* shop = new Shop("Shawerma #1");
 	config->AddShop(shop);
@@ -26,7 +26,7 @@ Config* Config::CreateDefault() {
 	Shop* shop2 = new Shop("Shawerma #2");
 	config->AddShop(shop2);
 
-	config->manager = new Manager();
+	config->manager = new GreedyManager();
 	config->provider = new Marketplace();
 	return config;
 }
@@ -108,7 +108,7 @@ void Config::DrawProducts() {
 	}
 
 	if (ImGui::Button("Add new product")) {
-		ProductDefinition* def = new ProductDefinition("Unnamed product", 100, 14);
+		ProductDefinition* def = new ProductDefinition("Unnamed product", 100, 14, 30);
 		this->AddDef(def);
 	}
 
