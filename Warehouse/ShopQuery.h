@@ -2,7 +2,7 @@
 #include "Utils.h"
 
 class Product;
-struct ShopQuery;
+class ShopQuery;
 class IShopPoint {
 public:
     virtual void OnReceived(ShopQuery* query) = 0;

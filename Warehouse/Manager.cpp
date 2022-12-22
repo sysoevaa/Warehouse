@@ -49,7 +49,7 @@ void Manager::OrderMissing(Warehouse* warehouse) {
 
     for (ProductDefinition* def : warehouse->GetAllDefs()) {
         int has = amounts[def];
-        int need = def->GetMaxAmount() * 0.75;
+        int need = def->GetMaxAmount() * 0.75f;
         if (has < need) {
             // order
             int rnd = Utils::Random(1, 4); // order delay

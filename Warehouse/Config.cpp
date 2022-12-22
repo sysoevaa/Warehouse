@@ -7,7 +7,9 @@
 #include "imgui/imgui.h"
 
 Config::Config() {
-	
+	this->manager = 0;
+	this->provider = 0;
+	this->sim_step = 1;
 }
 
 Config* Config::CreateDefault() {
