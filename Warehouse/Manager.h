@@ -29,4 +29,4 @@ public:
 class EconomyManager : public Manager {
 public:
     void Think(Warehouse* warehouse);
-}
+};

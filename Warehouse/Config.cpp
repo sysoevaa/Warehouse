@@ -26,7 +26,7 @@ Config* Config::CreateDefault() {
 	Shop* shop2 = new Shop("Shawerma #2");
 	config->AddShop(shop2);
 
-	config->manager = new Manager();
+	config->manager = new GreedyManager();
 	config->provider = new Marketplace();
 	return config;
 }
