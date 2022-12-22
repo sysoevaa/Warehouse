@@ -56,9 +56,10 @@ void MainMenuSystem::Present() {
 
 void MainMenuSystem::DrawMain() {
     ImGui::SetNextWindowPos(ImVec2(0, 20));
-    ImGui::Begin("Main", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+    ImGui::SetNextWindowSize(ImVec2(1000, 700));
+    if (ImGui::Begin("Main", 0, ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration)) {
+        Warehouse::g_Instance->Present();
 
-    Warehouse::g_Instance->Present();
-
-    ImGui::End();
+        ImGui::End();
+    }
 }

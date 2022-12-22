@@ -35,6 +35,7 @@ public:
 private:
 	vector<Product*> storage;
 	int simTime;
+	int wantsSimTime;
 	Config* config;
 	vector<ShopQuery*> globalQueries;
 

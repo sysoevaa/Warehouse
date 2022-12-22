@@ -105,6 +105,11 @@ void Config::DrawProducts() {
 			ImGui::SetNextItemWidth(70);
 			ImGui::InputInt(("Life days" + def->GetId()).c_str(), &days, 1, 3);
 			def->SetLifeDays(days);
+
+			int amount = def->GetMaxAmount();
+			ImGui::SetNextItemWidth(70);
+			ImGui::InputInt(("Max Amount" + def->GetId()).c_str(), &amount, 1, 200);
+			def->SetMaxAmount(amount);
 		}
 		ImGui::EndTable();
 	}

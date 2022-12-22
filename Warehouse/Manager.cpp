@@ -7,8 +7,11 @@ Manager::Manager() {
     this->totalProfit = 0;
 }
 
-void Manager::AddBalanceChange(int delta) {
+void Manager::RememberProfit() {
     this->profitHistory.push_back(this->totalProfit);
+}
+
+void Manager::AddBalanceChange(int delta) {
     this->totalProfit += delta;
 }
 

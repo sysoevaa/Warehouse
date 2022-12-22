@@ -19,7 +19,7 @@ public:
     void OrderMissing(Warehouse* warehouse);
     void RemoveExpired(Warehouse* warehouse);
     const vector<float>& GetProfitHistory() { return this->profitHistory; }
-
+    void RememberProfit();
 protected:
     std::vector<ShopQuery> pendingQueries;
     int totalProfit;

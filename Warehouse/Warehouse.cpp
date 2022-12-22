@@ -21,10 +21,85 @@ Warehouse::Warehouse(Config* cfg) {
 
 void Warehouse::Present() {
 	// render
-	ImGui::Text("Main window");
+	ImGui::Text(("Current day: " + std::to_string(this->simTime)).c_str());
+	ImGui::SameLine();
+	if (ImGui::Button("Simulate 1 day"))
+		this->wantsSimTime += 1;
+	ImGui::Text(("Current profit: " + std::to_string(this->GetManager()->GetTotalProfit())).c_str());
+
 	const auto& vl = this->GetManager()->GetProfitHistory();
-	float(*fn)(void*, int) = [](void* data, int idx) { return *((float*)data+idx); };
+	float(*fn)(void*, int) = [](void* data, int idx) { return *((float*)data + idx); };
 	ImGui::PlotLines("Total profit", fn, (void*)vl.data(), vl.size(), 0, 0, FLT_MAX, FLT_MAX, ImVec2(0, 90));
+
+
+
+	ImGuiTableFlags tableFlags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg | ImGuiTableFlags_BordersH | ImGuiTableFlags_BordersOuterH |
+		ImGuiTableFlags_BordersInnerH | ImGuiTableFlags_BordersV | ImGuiTableFlags_BordersOuterV | ImGuiTableFlags_BordersInnerV |
+		ImGuiTableFlags_BordersOuter | ImGuiTableFlags_BordersInner;
+	static bool display_headers = true;
+
+	ImGui::Separator();
+	ImGui::Text("Orders");
+	ImGui::BeginChild("child", ImVec2(0, 300), true);
+	if (ImGui::BeginTable("Orders", 3, tableFlags))
+	{
+		ImGui::TableSetupColumn("Product");
+		ImGui::TableSetupColumn("Count");
+		ImGui::TableSetupColumn("Price");
+		ImGui::TableHeadersRow();
+
+		for (int row = 0; row < this->globalQueries.size(); row++)
+		{
+			ShopQuery* query = this->globalQueries[row];
+			if (!dynamic_cast<Shop*>(query->GetRequestor()))
+				continue;
+			ImGui::TableNextRow();
+
+			for (int column = 0; column < 3; column++)
+			{
+				ImGui::TableSetColumnIndex(column);
+				if (column == 0)
+				{
+					ImGui::TextUnformatted(query->GetProduct()->GetProductDef()->GetName().c_str());
+				}
+				else if (column == 1)
+				{
+					ImGui::TextUnformatted(std::to_string(query->GetProduct()->GetAmount()).c_str());
+				}
+				else if (column == 2)
+				{
+					ImGui::TextUnformatted(std::to_string(query->GetBalance()).c_str());
+				}
+			}
+		}
+		ImGui::EndTable();
+	}
+	ImGui::EndChild();
+
+	ImGui::SameLine();
+
+	ImGui::Separator();
+	ImGui::Text("Storage");
+	ImGui::BeginChild("child1", ImVec2(0, 300), true);
+	if (ImGui::BeginTable("Storage", 2, tableFlags))
+	{
+		if (display_headers)
+		{
+			ImGui::TableSetupColumn("Product");
+			ImGui::TableSetupColumn("Expiration after");
+			//ImGui::TableSetupColumn("Price");
+			ImGui::TableHeadersRow();
+		}
+		for (auto type : this->storage) {
+			ImGui::TableNextRow();
+			ImGui::TableSetColumnIndex(0);
+			ImGui::TextUnformatted(type->GetProductDef()->GetName().c_str());
+			ImGui::TableSetColumnIndex(1);
+			ImGui::TextUnformatted(std::to_string(type->GetDays()).c_str());
+		}
+		ImGui::EndTable();
+	}
+	ImGui::EndChild();
 }
 
 void Warehouse::Simulate(int deltaTime) {
@@ -53,6 +128,7 @@ void Warehouse::Simulate(int deltaTime) {
 	}
 	//
 	this->GetManager()->Think(this);
+	this->GetManager()->RememberProfit();
 
 	while (ShopQuery* q = this->CreateQuery()) {
 		this->ProcessQuery(q);
@@ -69,11 +145,12 @@ void Warehouse::ProcessQuery(ShopQuery* query) {
 }
 
 void Warehouse::Update() {
-	if (this->simTime > 50) return;
-	cout << "----------------------------TIME " << this->simTime << endl;
-	this->Simulate(this->config->GetSimStep());
-	this->simTime += this->config->GetSimStep();
-	Utils::SyncTime(this->simTime);
+	while (this->simTime < this->wantsSimTime) {
+		cout << "----------------------------TIME " << this->simTime << endl;
+		this->Simulate(this->config->GetSimStep());
+		this->simTime += this->config->GetSimStep();
+		Utils::SyncTime(this->simTime);
+	}
 }
 
 const vector<Shop*>& Warehouse::GetShops() {
