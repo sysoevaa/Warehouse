@@ -96,13 +96,13 @@ void GreedyManager::Think(Warehouse* warehouse) {
 }
 
 void EconomyManager::Think(Warehouse* warehouse) {
-    std::sort(pendingQueries.begin(), pendingQueries.end(),
-        [&](ShopQuery& a, ShopQuery& b) {
-            return a.GetProduct()->GetDays() < b.GetProduct()->GetDays();
+    std::sort(warehouse->GetStorage().begin(), warehouse->GetStorage().end(),
+        [&](Product* a, Product* b) {
+            return a->GetDays() < b->GetDays();
         });
+
     for (auto item : pendingQueries) {
         auto name = item.GetProduct()->GetProductDef()->GetId();
-
         for (auto& product : warehouse->GetStorage()) {
             if (product->GetProductDef()->GetId() == name) {
                 int count = std::min(product->GetAmount(), item.GetProduct()->GetAmount());
@@ -114,7 +114,6 @@ void EconomyManager::Think(Warehouse* warehouse) {
         delete item.GetProduct();
     }
     pendingQueries.clear();
-
     this->OrderMissing(warehouse);
 }
 
