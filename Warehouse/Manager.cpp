@@ -8,6 +8,7 @@ Manager::Manager() {
 }
 
 void Manager::AddBalanceChange(int delta) {
+    this->profitHistory.push_back(this->totalProfit);
     this->totalProfit += delta;
 }
 
@@ -29,6 +30,8 @@ void Manager::RemoveExpired(Warehouse* warehouse) {
 
 
 void Manager::OrderMissing(Warehouse* warehouse) {
+    this->RemoveExpired(warehouse);
+
     std::map<ProductDefinition*, int> amounts;
 
     for (auto& v : warehouse->GetStorage()) {
@@ -83,13 +86,12 @@ void GreedyManager::Think(Warehouse* warehouse) {
             if (!count) continue;
             cout << "Sold " << count << " of " << product->GetProductDef()->GetName() << endl;
             warehouse->ApplyBalanceChange(count * item.GetProduct()->GetPrice());
-            totalProfit += count * item.GetProduct()->GetPrice();
             product->ChangeAmount(count);
             break;
         }
 
         delete item.GetProduct();
-    }
+    }   
     pendingQueries.clear();
 
     this->OrderMissing(warehouse);
@@ -107,7 +109,6 @@ void EconomyManager::Think(Warehouse* warehouse) {
             if (product->GetProductDef()->GetId() == name) {
                 int count = std::min(product->GetAmount(), item.GetProduct()->GetAmount());
                 warehouse->ApplyBalanceChange(count * item.GetProduct()->GetPrice());
-                totalProfit += count * item.GetProduct()->GetPrice();
                 product->ChangeAmount(count);
             }
         }

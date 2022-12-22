@@ -1,10 +1,8 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-#include <imgui.h>
-#include <imgui-SFML.h>
 
-#include "imgui.h"
-#include "imgui-SFML.h"
+#include "imgui/imgui.h"
+#include "imgui/imgui-SFML.h"
 
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/RenderWindow.hpp>

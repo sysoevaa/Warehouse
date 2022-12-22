@@ -18,10 +18,12 @@ public:
     virtual void Think(Warehouse* warehouse) = 0;
     void OrderMissing(Warehouse* warehouse);
     void RemoveExpired(Warehouse* warehouse);
+    const vector<float>& GetProfitHistory() { return this->profitHistory; }
 
 protected:
     std::vector<ShopQuery> pendingQueries;
     int totalProfit;
+    vector<float> profitHistory;
 };
 
 class GreedyManager : public Manager {

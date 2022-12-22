@@ -4,7 +4,7 @@
 #include "Manager.h"
 #include "Marketplace.h"
 
-#include "imgui.h"
+#include "imgui/imgui.h"
 
 Config::Config() {
 	
@@ -20,11 +20,13 @@ Config* Config::CreateDefault() {
 	config->AddDef(new ProductDefinition("Product 3", 100, 14, 20));
 	config->AddDef(new ProductDefinition("Product 4", 100, 14, 20));
 
-	Shop* shop = new Shop("Shawerma #1");
-	config->AddShop(shop);
-
-	Shop* shop2 = new Shop("Shawerma #2");
-	config->AddShop(shop2);
+	config->AddShop(new Shop("Shawerma #1"));
+	config->AddShop(new Shop("Shawerma #2"));
+	config->AddShop(new Shop("Shawerma #3"));
+	config->AddShop(new Shop("Shawerma #4"));
+	config->AddShop(new Shop("Shawerma #5"));
+	config->AddShop(new Shop("Shawerma #6"));
+	config->AddShop(new Shop("Shawerma #7"));
 
 	config->manager = new GreedyManager();
 	config->provider = new Marketplace();

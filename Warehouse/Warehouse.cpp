@@ -6,7 +6,7 @@
 #include "Utils.h"
 #include "Manager.h"
 
-#include "imgui.h"
+#include "imgui/imgui.h"
 
 Warehouse* Warehouse::g_Instance = nullptr;
 
@@ -22,7 +22,9 @@ Warehouse::Warehouse(Config* cfg) {
 void Warehouse::Present() {
 	// render
 	ImGui::Text("Main window");
-
+	const auto& vl = this->GetManager()->GetProfitHistory();
+	float(*fn)(void*, int) = [](void* data, int idx) { return *((float*)data+idx); };
+	ImGui::PlotLines("Total profit", fn, (void*)vl.data(), vl.size(), 0, 0, FLT_MAX, FLT_MAX, ImVec2(0, 90));
 }
 
 void Warehouse::Simulate(int deltaTime) {
@@ -100,6 +102,7 @@ void Warehouse::OnReceived(ShopQuery* query) {
 void Warehouse::ApplyBalanceChange(int change) {
 	this->GetManager()->AddBalanceChange(change);
 	cout << "Warehouse balance: " << this->GetManager()->GetTotalProfit() << endl;
+
 }
 
 ShopQuery* Warehouse::CreateQuery() {
