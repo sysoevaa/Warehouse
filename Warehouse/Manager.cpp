@@ -52,7 +52,7 @@ void Manager::OrderMissing(Warehouse* warehouse) {
         int need = def->GetMaxAmount() * 0.75f;
         if (has < need) {
             // order
-            int rnd = Utils::Random(1, 4); // order delay
+            int rnd = Utils::Random(2, 5); // order delay
             Product* prod = new Product(def, need - has);
             cout << "Ordering " << prod->GetAmount() << " of " << def->GetName() << endl;
             warehouse->ProcessQuery(ShopQuery::Create(warehouse->GetProvider(), warehouse, rnd, prod, prod->GetTotalPrice()));
@@ -61,6 +61,7 @@ void Manager::OrderMissing(Warehouse* warehouse) {
 }
 
 void GreedyManager::Think(Warehouse* warehouse) {
+    RemoveExpired(warehouse);
     std::sort(pendingQueries.begin(), pendingQueries.end(),
         [&](ShopQuery& a, ShopQuery& b) {
             return a.GetBalance() > b.GetBalance();
